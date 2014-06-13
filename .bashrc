@@ -8,9 +8,36 @@ else
   export PS1='\u@\h [\w] \$ '
 fi
 
+# Remove a stale host key from SSH's known hosts
+function frak() {
+  line=`/bin/sed  "$1q;d" ~/.ssh/known_hosts`
+  /bin/sed -i -e "$1d" ~/.ssh/known_hosts
+  /bin/echo "Removed line $1:"
+  /bin/echo $line
+}
+
+# Strip all comments and empty lines from a file
+function just() {
+  file=${1:-""}
+  egrep -v '^[ ]*#|^$' $file
+}
+
+# Strip all comments and empty lines from a file
+function justl() {
+  file=${1:-""}
+  egrep -v '^[ ]*#|^$' $file | less
+}
+
+# Unpack a RPM
+function unrpm() {
+  rpm2cpio $1 | cpio -idv
+}
+
 alias .t="rm -f *~ .*~ xerrors core.* a.out"
 alias .x="chmod +x"
 alias eamcs="emacs"
+alias gorram="just"
+alias gorraml="justl"
 alias l="less"
 alias ls="ls -F"
 alias ll="ls -la"
